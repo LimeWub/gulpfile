@@ -34,7 +34,7 @@ var gulp = require('gulp'); //BASE
  * ------- SETTINGS ------- 
  * 
  */
-var base = __dirname.'/';
+var base = __dirname + '/';
 var siteURL = 'http://'+__dirname.split('/').pop()+'.dev/';
 var appDir = base+'www/site'; //use this for php changes
 var templatesDir = appDir+'templates/'; //or this
