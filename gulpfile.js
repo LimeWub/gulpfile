@@ -24,33 +24,62 @@
  * 
  */
 
-var gulp = require('gulp'); //BASE
+/*
+ * 
+ * ------- REQUIREMENTS ------- 
+ * 
+ */
+
+	var    gulp = require('gulp'), //BASE
+		sass = require('gulp-sass'),
+		browserSync = require('browser-sync').create(),
+		rename = require('gulp-rename'),
+		uglify = require('gulp-uglify'),
+		mocha = require('gulp-mocha'),
+		babel = require('gulp-babel');
 
 /*
  * 
  * ------- SETTINGS ------- 
  * 
  */
-var base = __dirname + '/';
-var siteURL = 'http://'+__dirname.split('/').pop()+'.dev/';
-var appDir = base+'www/site/'; //use this for php changes
-var templatesDir = appDir+'templates/'; //or this
-var cssDir = templatesDir+'styles/';
-var sassDir = cssDir+'sass/' ;
-var scriptsDir = templatesDir+'scripts/';
-var scriptsMinDir = scriptsDir+'min/';
+	var    base = __dirname + '/',
+		siteURL = 'http://'+__dirname.split('/').pop()+'.dev/',
+		appDir = base+'www/',
+		
+		templatesDir = appDir+'templates/', //html (?)
 
+		stylesDir = appDir+'styles/',
+		sassDir = stylesDir+'sass/' ,
+		c_cssDir = stylesDir+'dist/',
+		c_cssMinDir = c_cssDir+'min/' ,
+		
+		scriptsDir = appDir+'scripts/',
+		ES8Dir = scriptsDir+'ES8/',
+		c_jsDir = scriptsDir+'dist/',
+		c_jsMinDir = c_jsDir+'min/';
 
-gulp.task('settings', function() {
-	console.log('base:           '+base);
-	console.log('siteURL:        '+siteURL);
-	console.log('appDir:         '+appDir);
-	console.log('templatesDir:   '+templatesDir);
-	console.log('sassDir:        '+sassDir);
-	console.log('cssDir:         '+cssDir);
-	console.log('scriptsDir:     '+scriptsDir);
-	console.log('scriptsMinDir:  '+scriptsMinDir);
-});
+	/*
+	 * @display settings
+	 */
+	gulp.task('settings', function() {
+		console.log('base:           '+base);
+		console.log('siteURL:        '+siteURL);
+		console.log('appDir:         '+appDir);
+		
+		console.log('templatesDir:   '+templatesDir);
+		
+		console.log('stylesDir:        '+stylesDir);
+		console.log('sassDir:         '+sassDir);
+		console.log('c_cssDir:        '+c_cssDir);
+		console.log('c_cssMinDir:         '+c_cssMinDir);
+		
+		console.log('scriptsDir:         '+scriptsDir);
+		console.log('ES8Dir:         '+ES8Dir);
+		console.log('c_jsDir:     '+c_jsDir);
+		console.log('c_jsMinDir:  '+c_jsMinDir);
+	});
+
 
 
 /*
@@ -59,42 +88,67 @@ gulp.task('settings', function() {
  * 
  */
 
-var sass = require('gulp-sass'); //SASS PLUGIN
-gulp.task('sass', function(){ //Task
-	return gulp.src( sassDir + '**/*.scss')
-		.pipe(sass()) // Using gulp-sass
-		.pipe(gulp.dest( cssDir ))
+
+	/*
+	 * @compile SaSS => CSS
+	 */
+	gulp.task('sass', function(){
+		return gulp.src( sassDir + '**/*.scss')
+			.pipe(sass())
+			.pipe(gulp.dest( c_cssDir )) //TODO: Minify
+			.pipe(browserSync.reload({
+				stream: true
+			 }));
+	});
+
+	
+	/*
+	 * @compile ES(next) => ES5
+	 */
+	 gulp.task('babel', function() {
+		 gulp.src(ES8Dir)
+			.pipe(babel({
+				presets: ['env']
+			}))
+		  .pipe(gulp.dest(c_jsDir));
+	 });
+	
+	
+	/*
+	 * @minify JS => JS.min
+	 */
+	gulp.task('scripts', function() {  
+	return gulp.src([c_jsDir + '**/*.js', '!'+c_jsDir + '**/*.min.*', '!'+c_jsMinDir])
+		.pipe(rename({
+			suffix: '.min'
+		}))
+		.pipe(uglify({
+			mangle: true
+		}))
+		.pipe(gulp.dest(c_jsMinDir))
 		.pipe(browserSync.reload({
 			stream: true
 		 }));
-});
-
-
-var browserSync = require('browser-sync').create(); //BROWSER SYNC PLUGIN (Live reloading)
-gulp.task('browserSync', function() { //Task
-	browserSync.init({
-		proxy:  siteURL
 	});
-	console.log(siteURL);
-});
 
-
-var rename = require('gulp-rename');  //JAVASCRIPT to MIN PLUGINS
-var uglify = require('gulp-uglify');
-gulp.task('scripts', function() {  
-    return gulp.src([scriptsDir + '**/*.js', '!'+scriptsDir + '**/*.min.*', '!'+scriptsMinDir])
-        .pipe(rename({
-            suffix: '.min'
-        }))
-        .pipe(uglify({
-		mangle: true
-	}))
-        .pipe(gulp.dest(scriptsMinDir))
-	.pipe(browserSync.reload({
-			stream: true
-	 }));
-});
-
+	/*
+	 * @tests
+	 */
+	 gulp.task('test', function() {
+		return gulp.src(['test/*.js'])
+			.pipe(mocha({
+				compilers:babel
+			}));
+	});
+	
+	/*
+	 * @autosync
+	 */
+	gulp.task('browserSync', function() {
+		browserSync.init({
+			proxy:  siteURL
+		});
+	});
 
 
 
@@ -116,16 +170,15 @@ gulp.task('scripts', function() {
  * ------- WATCHES ------- 
  * 
  */
-//gulp.watch('files-to-watch', ['tasks', 'to', 'run']); 
-//gulp.watch('app/scss/**/*.scss', ['sass']); 
-gulp.task('watch', ['browserSync','sass','scripts'], function (){
-	gulp.watch(sassDir + '**/*.scss', ['sass']); 
-	gulp.watch(scriptsDir + '**/*.js', ['scripts']);
 
-	// Other watches
-	// Reloads the browser whenever HTML or JS files change
-	gulp.watch(templatesDir+'**/*.html', browserSync.reload);
-	gulp.watch(templatesDir+'**/*.php', browserSync.reload);
-	
-	console.log(templatesDir+'**/*.html');
-});
+	gulp.task('watch', ['browserSync','sass','scripts'], function (){
+		//gulp.watch('files-to-watch', ['tasks', 'to', 'run']);
+		gulp.watch(ES8Dir + '**/*.js', ['babel']);
+		gulp.watch(sassDir + '**/*.scss', ['sass']); 
+
+		// Other watches
+		// Reloads the browser whenever HTML or PHP files change
+		gulp.watch(appDir+'**/*.html', browserSync.reload);
+		gulp.watch(appDir+'**/*.php', browserSync.reload);
+
+	});

@@ -1,9 +1,9 @@
 {
-  "name": "processwire3062",
+  "name": "gulpbddel",
   "version": "1.0.0",
-  "description": "Testing site",
+  "description": "Simple Static Website Base",
   "main": "www/index.php",
-  "author": "Myrto k",
+  "author": "Myrto K",
   "license": "MIT",
   "devDependencies": {
     "browser-sync": "^2.18.7",
