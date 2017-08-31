@@ -1,11 +1,12 @@
-#SUMMARY
+<h1> WIP (Todo plans follow)</h1>
+<h2>SUMMARY</h2>
 
-#REQUIRES
+<h2>REQUIRES</h2>
 * Yarn
 * Docker
 * Gulp
 
-#INCLUDES
+<h2>INCLUDES</h2>
 * Dockerfile
 	(Simple Node Server if required?)
 * Gulp
@@ -20,7 +21,7 @@
 
 
 
-#SETUP
+<h2>SETUP</h2>
 
 RESOURCES/CREDITS
 Quick TDD setup with Node, ES6, Gulp and Mocha
