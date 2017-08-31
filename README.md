@@ -1,28 +1,12 @@
-<h1> WIP (Todo plans follow)</h1>
-<h2>SUMMARY</h2>
+<h1>NYStudio Version</h1>
 
-<h2>REQUIRES</h2>
-* Yarn
-* Docker
-* Gulp
+<h2>RESOURCES</h2>
 
-<h2>INCLUDES</h2>
-* Dockerfile
-	(Simple Node Server if required?)
-* Gulp
-	* Sass Minify
-	* Browsersync
-	* Javascript Min
-	* Javascript Uglify
-	* Babel transpiling
-	* Test Suite Automatic running
-*Babel
-*Mocha (BDD)
+<h3>package.js</h3>
+<a href="https://nystudio107.com/blog/a-better-package-json-for-the-frontend">A Gulp Workflow for Frontend Development Automation</a> by Andrew Welch@<a href="https://nystudio107.com">nystudio107</a>
+
+<h3>gulpfile.js</h3>
+<a href="https://nystudio107.com/blog/a-gulp-workflow-for-frontend-development-automation">A Better package.json for the Frontend</a> by Andrew Welch@<a href="https://nystudio107.com">nystudio107</a>
 
 
-
-<h2>SETUP</h2>
-
-RESOURCES/CREDITS
-Quick TDD setup with Node, ES6, Gulp and Mocha
-http://www.adamcowley.co.uk/javascript/quick-test-driven-development-setup-with-node-es6-and-gulp/
+<p>Much Respect!</p>
