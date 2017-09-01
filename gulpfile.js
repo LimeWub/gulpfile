@@ -4,10 +4,18 @@ const pkg = require("./package.json");
 // gulp
 const gulp = require("gulp");
 
-// load all plugins in "devDependencies" into the variable $
-const $ = require("gulp-load-plugins")({
+// load all plugins in "devDependencies" into the variable _f
+const _f = require("gulp-load-plugins")({
 	pattern: ["*"],
 	scope: ["devDependencies"]
+});
+
+//browserSync
+var browserSync = require('browser-sync').create();
+gulp.task('browserSync', function() {
+	browserSync.init({
+		proxy:  pkg.site_url
+	});
 });
 
 const onError = (err) => {
@@ -18,9 +26,9 @@ const banner = [
 	"/**",
 	" * @project     <%= pkg.name %>",
 	" * @author      <%= pkg.author %>",
-	" * @build       " + $.moment().format("llll") + " ET",
-	" * @release     " + $.gitRevSync.long() + " [" + $.gitRevSync.branch() + "]",
-	" * @copyright   Copyright (c) " + $.moment().format("YYYY") + ", <%= pkg.copyright %>",
+	" * @build       " + _f.moment().format("llll") + " ET",
+	" * @release     " + _f.gitRevSync.long() + " [" + _f.gitRevSync.branch() + "]",
+	" * @copyright   Copyright (c) " + _f.moment().format("YYYY") + ", <%= pkg.copyright %>",
 	" *",
 	" */",
 	""
@@ -28,31 +36,31 @@ const banner = [
 
 // scss - build the scss to the build folder, including the required paths, and writing out a sourcemap
 gulp.task("scss", () => {
-	$.fancyLog("-> Compiling scss");
+	_f.fancyLog("-> Compiling scss");
 	return gulp.src(pkg.paths.src.scss + pkg.vars.scssName)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.sourcemaps.init({loadMaps: true}))
-		.pipe($.sass({
+		.pipe(_f.plumber({errorHandler: onError}))
+		.pipe(_f.sourcemaps.init({loadMaps: true}))
+		.pipe(_f.sass({
 				includePaths: pkg.paths.scss
 			})
-			.on("error", $.sass.logError))
-		.pipe($.cached("sass_compile"))
-		.pipe($.autoprefixer())
-		.pipe($.sourcemaps.write("./"))
-		.pipe($.size({gzip: true, showFiles: true}))
+			.on("error", _f.sass.logError))
+		.pipe(_f.cached("sass_compile"))
+		.pipe(_f.autoprefixer())
+		.pipe(_f.sourcemaps.write("./"))
+		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.build.css));
 });
 
 // css task - combine & minimize any distribution CSS into the public css folder, and add our banner to it
 gulp.task("css", ["scss"], () => {
-	$.fancyLog("-> Building css");
+	_f.fancyLog("-> Building css");
 	return gulp.src(pkg.globs.distCss)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.newer({dest: pkg.paths.dist.css + pkg.vars.siteCssName}))
-		.pipe($.print())
-		.pipe($.sourcemaps.init({loadMaps: true}))
-		.pipe($.concat(pkg.vars.siteCssName))
-		.pipe($.cssnano({
+		.pipe(_f.plumber({errorHandler: onError}))
+		.pipe(_f.newer({dest: pkg.paths.dist.css + pkg.vars.siteCssName}))
+		.pipe(_f.print())
+		.pipe(_f.sourcemaps.init({loadMaps: true}))
+		.pipe(_f.concat(pkg.vars.siteCssName))
+		.pipe(_f.cssnano({
 			discardComments: {
 				removeAll: true
 			},
@@ -61,89 +69,45 @@ gulp.task("css", ["scss"], () => {
 			minifyFontValues: true,
 			minifySelectors: true
 		}))
-		.pipe($.header(banner, {pkg: pkg}))
-		.pipe($.sourcemaps.write("./"))
-		.pipe($.size({gzip: true, showFiles: true}))
+		.pipe(_f.header(banner, {pkg: pkg}))
+		.pipe(_f.sourcemaps.write("./"))
+		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.css))
-		.pipe($.filter("**/*.css"))
-		.pipe($.livereload());
-});
-
-// Prism js task - combine the prismjs Javascript & config file into one bundle
-gulp.task("prism-js", () => {
-	$.fancyLog("-> Building prism.min.js...");
-	return gulp.src(pkg.globs.prismJs)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.newer({dest: pkg.paths.build.js + "prism.min.js"}))
-		.pipe($.concat("prism.min.js"))
-		.pipe($.uglify())
-		.pipe($.size({gzip: true, showFiles: true}))
-		.pipe(gulp.dest(pkg.paths.build.js));
+		.pipe(_f.filter("**/*.css"))
+		.pipe(browserSync.stream());
 });
 
 // babel js task - transpile our Javascript into the build directory
 gulp.task("js-babel", () => {
-	$.fancyLog("-> Transpiling Javascript via Babel...");
+	_f.fancyLog("-> Transpiling Javascript via Babel...");
 	return gulp.src(pkg.globs.babelJs)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.newer({dest: pkg.paths.build.js}))
-		.pipe($.babel())
-		.pipe($.size({gzip: true, showFiles: true}))
+		.pipe(_f.plumber({errorHandler: onError}))
+		.pipe(_f.newer({dest: pkg.paths.build.js}))
+		.pipe(_f.babel())
+		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.build.js));
-});
-
-// components - build .vue VueJS components
-gulp.task("components", () => {
-	$.fancyLog("-> Compiling Vue Components");
-	return gulp.src(pkg.globs.components)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.newer({dest: pkg.paths.build.js, ext: ".js"}))
-		.pipe($.vueify({}))
-		.pipe($.size({gzip: true, showFiles: true}))
-		.pipe(gulp.dest(pkg.paths.build.js));
-});
-
-// inline js task - minimize the inline Javascript into _inlinejs in the templates path
-gulp.task("js-inline", () => {
-	$.fancyLog("-> Copying inline js");
-	return gulp.src(pkg.globs.inlineJs)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.newer({dest: pkg.paths.templates + "_inlinejs", ext: ".min.js"}),
-			$.newer({dest: pkg.paths.templates + "_inlinejs"})
-		))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.uglify()
-		))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.rename({suffix: ".min"})
-		))
-		.pipe($.size({gzip: true, showFiles: true}))
-		.pipe(gulp.dest(pkg.paths.templates + "_inlinejs"))
-		.pipe($.filter("**/*.js"))
-		.pipe($.livereload());
 });
 
 // js task - minimize any distribution Javascript into the public js folder, and add our banner to it
-gulp.task("js", ["js-inline", "js-babel", "prism-js"], () => {
-	$.fancyLog("-> Building js");
+gulp.task("js", ["js-babel"], () => {
+	_f.fancyLog("-> Building js");
 	return gulp.src(pkg.globs.distJs)
-		.pipe($.plumber({errorHandler: onError}))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.newer({dest: pkg.paths.dist.js, ext: ".min.js"}),
-			$.newer({dest: pkg.paths.dist.js})
+		.pipe(_f.plumber({errorHandler: onError}))
+		.pipe(_f.if(["*.js", "!*.min.js"],
+			_f.newer({dest: pkg.paths.dist.js, ext: ".min.js"}),
+			_f.newer({dest: pkg.paths.dist.js})
 		))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.uglify()
+		.pipe(_f.if(["*.js", "!*.min.js"],
+			_f.uglify()
 		))
-		.pipe($.if(["*.js", "!*.min.js"],
-			$.rename({suffix: ".min"})
+		.pipe(_f.if(["*.js", "!*.min.js"],
+			_f.rename({suffix: ".min"})
 		))
-		.pipe($.header(banner, {pkg: pkg}))
-		.pipe($.size({gzip: true, showFiles: true}))
+		.pipe(_f.header(banner, {pkg: pkg}))
+		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.js))
-		.pipe($.filter("**/*.js"))
-		.pipe($.livereload());
+		.pipe(_f.filter("**/*.js"))
+		.pipe(browserSync.reload());
 });
 
 // Process data in an array synchronously, moving onto the n+1 item only after the nth item callback
@@ -175,8 +139,8 @@ function processCriticalCSS(element, i, callback) {
 		criticalWidth = 600;
 		criticalHeight = 19200;
 	}
-	$.fancyLog("-> Generating critical CSS: " + $.chalk.cyan(criticalSrc) + " -> " + $.chalk.magenta(criticalDest));
-	$.critical.generate({
+	_f.fancyLog("-> Generating critical CSS: " + _f.chalk.cyan(criticalSrc) + " -> " + _f.chalk.magenta(criticalDest));
+	_f.critical.generate({
 		src: criticalSrc,
 		dest: criticalDest,
 		inline: false,
@@ -190,7 +154,7 @@ function processCriticalCSS(element, i, callback) {
 		height: criticalHeight
 	}, (err, output) => {
 		if (err) {
-			$.fancyLog($.chalk.magenta(err));
+			_f.fancyLog(_f.chalk.magenta(err));
 		}
 		callback();
 	});
@@ -209,8 +173,8 @@ function processDownload(element, i, callback) {
 	const downloadSrc = element.url;
 	const downloadDest = element.dest;
 
-	$.fancyLog("-> Downloading URL: " + $.chalk.cyan(downloadSrc) + " -> " + $.chalk.magenta(downloadDest));
-	$.download(downloadSrc)
+	_f.fancyLog("-> Downloading URL: " + _f.chalk.cyan(downloadSrc) + " -> " + _f.chalk.magenta(downloadDest));
+	_f.download(downloadSrc)
 		.pipe(gulp.dest(downloadDest));
 	callback();
 }
@@ -233,11 +197,11 @@ function processAccessibility(element, i, callback) {
 				[
 					'notice',
 					'warning'
-				],
+				]
 		};
-	const test = $.pa11y(options);
+	const test = _f.pa11y(options);
 
-	$.fancyLog("-> Checking Accessibility for URL: " + $.chalk.cyan(accessibilitySrc));
+	_f.fancyLog("-> Checking Accessibility for URL: " + _f.chalk.cyan(accessibilitySrc));
 	test.run(accessibilitySrc, (error, results) => {
 		cliReporter.results(results, accessibilitySrc);
 		callback();
@@ -254,8 +218,8 @@ gulp.task("a11y", (callback) => {
 
 //favicons-generate task
 gulp.task("favicons-generate", () => {
-	$.fancyLog("-> Generating favicons");
-	return gulp.src(pkg.paths.favicon.src).pipe($.favicons({
+	_f.fancyLog("-> Generating favicons");
+	return gulp.src(pkg.paths.favicon.src).pipe(_f.favicons({
 		appName: pkg.name,
 		appDescription: pkg.description,
 		developerName: pkg.author,
@@ -287,16 +251,16 @@ gulp.task("favicons-generate", () => {
 
 //copy favicons task
 gulp.task("favicons", ["favicons-generate"], () => {
-	$.fancyLog("-> Copying favicon.ico");
+	_f.fancyLog("-> Copying favicon.ico");
 	return gulp.src(pkg.globs.siteIcon)
-		.pipe($.size({gzip: true, showFiles: true}))
+		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.base));
 });
 
 // imagemin task
 gulp.task("imagemin", () => {
 	return gulp.src(pkg.paths.dist.img + "**/*.{png,jpg,jpeg,gif,svg}")
-		.pipe($.imagemin({
+		.pipe(_f.imagemin({
 			progressive: true,
 			interlaced: true,
 			optimizationLevel: 7,
@@ -310,8 +274,8 @@ gulp.task("imagemin", () => {
 //generate-fontello task
 gulp.task("generate-fontello", () => {
 	return gulp.src(pkg.paths.src.fontello + "config.json")
-		.pipe($.fontello())
-		.pipe($.print())
+		.pipe(_f.fontello())
+		.pipe(_f.print())
 		.pipe(gulp.dest(pkg.paths.build.fontello))
 });
 
@@ -322,15 +286,14 @@ gulp.task("fonts", ["generate-fontello"], () => {
 });
 
 // Default task
-gulp.task("default", ["css", "js"], () => {
-	$.livereload.listen();
+gulp.task("default", ["browserSync","css", "js"], () => {
 	gulp.watch([pkg.paths.src.scss + "**/*.scss"], ["css"]);
 	gulp.watch([pkg.paths.src.css + "**/*.css"], ["css"]);
 	gulp.watch([pkg.paths.src.js + "**/*.js"], ["js"]);
 	gulp.watch([pkg.paths.templates + "**/*.{html,htm,twig}"], () => {
 		gulp.src(pkg.paths.templates)
-			.pipe($.plumber({errorHandler: onError}))
-			.pipe($.livereload());
+			.pipe(_f.plumber({errorHandler: onError}))
+			.pipe(browserSync.reload());
 	});
 });
 
