@@ -10,10 +10,10 @@ const _f = require("gulp-load-plugins")({
 	scope: ["devDependencies"]
 });
 
-//browserSync
-var browserSync = require('browser-sync').create();
-gulp.task('browserSync', function() {
-	browserSync.init({
+//browsersync
+_f.browser = require('browser-sync').create();
+gulp.task('_f.browser', function() {
+	_f.browser.init({
 		proxy:  pkg.site_url
 	});
 });
@@ -74,13 +74,13 @@ gulp.task("css", ["scss"], () => {
 		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.css))
 		.pipe(_f.filter("**/*.css"))
-		.pipe(browserSync.stream());
+		.pipe(_f.browser.stream());
 });
 
 // babel js task - transpile our Javascript into the build directory
 gulp.task("js-babel", () => {
 	_f.fancyLog("-> Transpiling Javascript via Babel...");
-	return gulp.src(pkg.globs.babelJs)
+	return gulp.src(pkg.paths.src.js + "*.js")
 		.pipe(_f.plumber({errorHandler: onError}))
 		.pipe(_f.newer({dest: pkg.paths.build.js}))
 		.pipe(_f.babel())
@@ -107,7 +107,7 @@ gulp.task("js", ["js-babel"], () => {
 		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.js))
 		.pipe(_f.filter("**/*.js"))
-		.pipe(browserSync.reload());
+		.pipe(_f.browser.reload());
 });
 
 // Process data in an array synchronously, moving onto the n+1 item only after the nth item callback
@@ -194,10 +194,10 @@ function processAccessibility(element, i, callback) {
 	const options = {
 		log: cliReporter,
 		ignore:
-				[
-					'notice',
-					'warning'
-				]
+			[
+				'notice',
+				'warning'
+			]
 		};
 	const test = _f.pa11y(options);
 
@@ -252,7 +252,7 @@ gulp.task("favicons-generate", () => {
 //copy favicons task
 gulp.task("favicons", ["favicons-generate"], () => {
 	_f.fancyLog("-> Copying favicon.ico");
-	return gulp.src(pkg.globs.siteIcon)
+	return gulp.src(pkg.paths.favicon.src)
 		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.base));
 });
@@ -286,14 +286,13 @@ gulp.task("fonts", ["generate-fontello"], () => {
 });
 
 // Default task
-gulp.task("default", ["browserSync","css", "js"], () => {
+gulp.task("default", ["_f.browser","css", "js"], () => {
 	gulp.watch([pkg.paths.src.scss + "**/*.scss"], ["css"]);
-	gulp.watch([pkg.paths.src.css + "**/*.css"], ["css"]);
 	gulp.watch([pkg.paths.src.js + "**/*.js"], ["js"]);
 	gulp.watch([pkg.paths.templates + "**/*.{html,htm,twig}"], () => {
 		gulp.src(pkg.paths.templates)
 			.pipe(_f.plumber({errorHandler: onError}))
-			.pipe(browserSync.reload());
+			.pipe(_f.browser.reload());
 	});
 });
 
