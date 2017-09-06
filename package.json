@@ -8,30 +8,31 @@
 	"copyright": "MCK",
 	"license": "UNLICENSED",
 	"private": true,
-	"browserslist": "> 1%, Last 2 versions, iOS 8",
+	"browserslist": [
+		"> 1%",
+		"Last 2 versions",
+		"iOS 8"
+	],
 	"babel": {
 		"presets": [
 			[
 				"env",
 				{
-					"targets": {
-						"browsers": [
-							"> 1%, Last 2 versions, iOS 8"
-						]
-					}
+					"useBuiltIns": true,
+					"debug": true
 				}
 			]
 		]
 	},
 	"paths": {
 		"src": {
-			"base": "./www/site/templates/frontend/src/",
-			"fontello": "./www/site/templates/frontend/src/fontello/",
-			"fonts": "./www/site/templates/frontend/src/fonts/",
-			"js": "./www/site/templates/frontend/src/scripts/",
-			"img": "./www/site/templates/frontend/src/img/",
-			"css": "./www/site/templates/frontend/src/styles/",
-			"scss": "./www/site/templates/frontend/src/styles/scss/"
+			"base": "./www/site/templates/_dev/src/",
+			"fontello": "./www/site/templates/_dev/src/fonts/fontello/",
+			"fonts": "./www/site/templates/_dev/src/fonts/",
+			"js": "./www/site/templates/_dev/src/scripts/",
+			"img": "./www/site/templates/_dev/src/img/",
+			"css": "./www/site/templates/_dev/src/styles/",
+			"scss": "./www/site/templates/_dev/src/styles/scss/"
 		},
 		"dist": {
 			"base": "./www/site/templates/",
@@ -41,12 +42,12 @@
 			"img": "./www/site/templates/img"
 		},
 		"build": {
-			"base": "./www/site/templates/frontend/build/",
-			"css": "./www/site/templates/frontend/build/styles",
-			"fontello": "./www/site/templates/frontend/build/fonts/fontello/",
-			"fonts": "./www/site/templates/frontend/build/fonts/",
-			"js": "./www/site/templates/frontend/build/scripts/",
-			"html": "./www/site/templates/frontend/build/html/"
+			"base": "./www/site/templates/_dev/build/",
+			"css": "./www/site/templates/_dev/build/styles",
+			"fontello": "./www/site/templates/_dev/build/fonts/fontello/",
+			"fonts": "./www/site/templates/_dev/build/fonts/",
+			"js": "./www/site/templates/_dev/build/scripts/",
+			"html": "./www/site/templates/_dev/build/html/"
 		},
 		"favicon": {
 			"src": "./www/site/templates/img/favicon/favicon.ico",
@@ -58,25 +59,24 @@
 	},
 	"urls": {
 		"live": "https://gulpbddel.com/",
-		"local": "https://gulpbddel.dev/",
+		"local": "http://gulpbddel.dev/",
 		"critical": "https://gulpbddel.com/"
 	},
 	"vars": {
-		"siteCssName": "site.combined.min.css",
-		"scssName": "style.scss",
-		"cssName": "style.css"
+		"siteCssName": "main.min.css",
+		"scssName": "main.scss",
+		"cssName": "main.css"
 	},
 	"globs": {
 		"distCss": [
 			"./node_modules/normalize.css/normalize.css",
-			"./node_modules/flexboxgrid/dist/flexboxgrid.min.css",
-			"./www/site/templates/frontend/build/fonts/fontello/css/fontello-codes.css",
-			"./www/site/templates/frontend/build/styles/*.css",
-			"./www/site/templates/frontend/src/styles/*.css"
+			"./www/site/templates/_dev/build/fonts/fontello/css/fontello-codes.css",
+			"./www/site/templates/_dev/build/styles/*.css",
+			"./www/site/templates/_dev/src/styles/*.css"
 		],
 		"fonts": [
-			"./www/site/templates/frontend/build/fonts/fontello/font/*.{eot,ttf,woff,woff2}",
-			"./www/site/templates/frontend/src/fonts/*.{eot,ttf,woff,woff2}"
+			"./www/site/templates/_dev/build/fonts/fontello/font/*.{eot,ttf,woff,woff2}",
+			"./www/site/templates/_dev/src/fonts/*.{eot,ttf,woff,woff2}"
 		],
 		"critical": [
 			{
@@ -115,52 +115,57 @@
 			}
 		],
 		"distJs": [
-			"./build/js/*.js",
+			"./www/site/templates/_dev/build/scripts/*.js",
 			"./node_modules/lazysizes/lazysizes.min.js",
 			"./node_modules/lazysizes/plugins/bgset/ls.bgset.min.js"
 		]
 	},
 	"dependencies": {
-		"fg-loadcss": "^1.2.0",
-		"fontfaceobserver": "^2.0.5",
-		"lazysizes": "^2.0.6",
-		"loadjs": "^3.3.1",
-		"normalize.css": "^5.0.0",
-		"tiny-cookie": "^1.0.1"
+		"fg-loadcss": "^1.3.1",
+		"fontfaceobserver": "^2.0.13",
+		"lazysizes": "^4.0.0-rc3",
+		"loadjs": "^3.5.1",
+		"normalize.css": "^7.0.0",
+		"tiny-cookie": "^2.0.2"
 	},
 	"devDependencies": {
-		"browser-sync": "^2.18.13",
-		"babel-plugin-transform-runtime": "^6.15.0",
+		"babel-core": "^6.26.0",
+		"babel-plugin-transform-runtime": "^6.23.0",
+		"babel-polyfill": "^6.26.0",
 		"babel-preset-env": "^1.6.0",
-		"critical": "0.8.0",
+		"browser-sync": "^2.18.13",
+		"critical": "^0.9.1",
+		"fancy-log": "^1.3.0",
+		"git-rev-sync": "^1.9.1",
 		"gulp": "^3.9.1",
-		"gulp-autoprefixer": "^3.1.0",
-		"gulp-babel": "^6.1.2",
+		"gulp-autoprefixer": "^4.0.0",
+		"gulp-babel": "^7.0.0",
 		"gulp-cached": "^1.1.1",
-		"gulp-concat": "^2.6.0",
+		"gulp-concat": "^2.6.1",
 		"gulp-cssnano": "^2.1.2",
-		"gulp-debug": "^2.1.2",
+		"gulp-debug": "^3.1.0",
 		"gulp-download": "^0.0.1",
-		"gulp-favicons": "^2.2.6",
+		"gulp-favicons": "^2.2.7",
 		"gulp-filter": "^5.0.1",
 		"gulp-fontello": "^0.4.6",
-		"gulp-header": "^1.8.7",
-		"gulp-if": "^2.0.1",
-		"gulp-imagemin": "^3.1.1",
-		"gulp-load-plugins": "^1.3.0",
-		"gulp-newer": "^1.2.0",
+		"gulp-header": "^1.8.9",
+		"gulp-if": "^2.0.2",
+		"gulp-imagemin": "^3.3.0",
+		"gulp-livereload": "^3.8.1",
+		"gulp-load-plugins": "^1.5.0",
+		"gulp-newer": "^1.3.0",
 		"gulp-plumber": "^1.1.0",
 		"gulp-print": "^2.0.1",
 		"gulp-rename": "^1.2.2",
-		"gulp-replace": "0.5.4",
-		"gulp-rev": "^7.1.0",
-		"gulp-sass": "^2.1.0",
+		"gulp-replace": "^0.6.1",
+		"gulp-rev": "^8.0.0",
+		"gulp-sass": "^3.1.0",
 		"gulp-size": "^2.1.0",
-		"gulp-sourcemaps": "^2.2.1",
-		"gulp-streamify": "1.0.2",
-		"gulp-uglify": "^1.5.4",
-		"moment": "^2.14.1",
-		"pa11y": "^4.11.0"
+		"gulp-sourcemaps": "^2.6.1",
+		"gulp-streamify": "^1.0.2",
+		"gulp-uglify": "^3.0.0",
+		"moment": "^2.18.1",
+		"pa11y": "^4.12.1"
 	},
 	"scripts": {
 		"start": "gulp",

@@ -10,14 +10,6 @@ const _f = require("gulp-load-plugins")({
 	scope: ["devDependencies"]
 });
 
-//browsersync
-_f.browser = require('browser-sync').create();
-gulp.task('_f.browser', function() {
-	_f.browser.init({
-		proxy:  pkg.site_url
-	});
-});
-
 const onError = (err) => {
 	console.log(err);
 };
@@ -74,7 +66,7 @@ gulp.task("css", ["scss"], () => {
 		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.css))
 		.pipe(_f.filter("**/*.css"))
-		.pipe(_f.browser.stream());
+		.pipe(_f.livereload());
 });
 
 // babel js task - transpile our Javascript into the build directory
@@ -107,7 +99,7 @@ gulp.task("js", ["js-babel"], () => {
 		.pipe(_f.size({gzip: true, showFiles: true}))
 		.pipe(gulp.dest(pkg.paths.dist.js))
 		.pipe(_f.filter("**/*.js"))
-		.pipe(_f.browser.reload());
+		.pipe(_f.livereload());
 });
 
 // Process data in an array synchronously, moving onto the n+1 item only after the nth item callback
@@ -286,14 +278,16 @@ gulp.task("fonts", ["generate-fontello"], () => {
 });
 
 // Default task
-gulp.task("default", ["_f.browser","css", "js"], () => {
+gulp.task("default", ["css", "js"], () => {
+	_f.livereload.listen();
 	gulp.watch([pkg.paths.src.scss + "**/*.scss"], ["css"]);
 	gulp.watch([pkg.paths.src.js + "**/*.js"], ["js"]);
-	gulp.watch([pkg.paths.templates + "**/*.{html,htm,twig}"], () => {
+	gulp.watch([pkg.paths.templates + "**/*.{html,htm,twig,php}"], () => {
 		gulp.src(pkg.paths.templates)
 			.pipe(_f.plumber({errorHandler: onError}))
-			.pipe(_f.browser.reload());
+			.pipe(_f.livereload());
 	});
+	
 });
 
 // Production build
