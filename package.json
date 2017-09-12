@@ -36,14 +36,14 @@
 		},
 		"dist": {
 			"base": "./www/site/templates/",
-			"css": "./www/site/templates/styles",
-			"js": "./www/site/templates/scripts",
-			"fonts": "./www/site/templates/fonts",
-			"img": "./www/site/templates/img"
+			"css": "./www/site/templates/styles/",
+			"js": "./www/site/templates/scripts/",
+			"fonts": "./www/site/templates/fonts/",
+			"img": "./www/site/templates/img/"
 		},
 		"build": {
 			"base": "./www/site/templates/_dev/build/",
-			"css": "./www/site/templates/_dev/build/styles",
+			"css": "./www/site/templates/_dev/build/styles/",
 			"fontello": "./www/site/templates/_dev/build/fonts/fontello/",
 			"fonts": "./www/site/templates/_dev/build/fonts/",
 			"js": "./www/site/templates/_dev/build/scripts/",
@@ -60,7 +60,7 @@
 	"urls": {
 		"live": "https://gulpbddel.com/",
 		"local": "http://gulpbddel.dev/",
-		"critical": "https://gulpbddel.com/"
+		"critical": "http://gulpbddel.dev/"
 	},
 	"vars": {
 		"siteCssName": "main.min.css",
@@ -81,31 +81,15 @@
 		"critical": [
 			{
 				"url": "",
-				"template": "index"
+				"template": "home"
 			},
 			{
-				"url": "blog/stop-using-htaccess-files-no-really",
-				"template": "blog/_entry"
-			},
-			{
-				"url": "blog/stop-using-htaccess-files-no-really",
-				"template": "blog/_amp_entry"
+				"url": "a-page",
+				"template": "page"
 			},
 			{
 				"url": "blog",
-				"template": "blog/index"
-			},
-			{
-				"url": "blog",
-				"template": "blog/amp_index"
-			},
-			{
-				"url": "offline",
-				"template": "offline"
-			},
-			{
-				"url": "404",
-				"template": "404"
+				"template": "blog"
 			}
 		],
 		"download": [

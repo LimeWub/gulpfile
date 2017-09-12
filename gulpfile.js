@@ -131,7 +131,7 @@ function processCriticalCSS(element, i, callback) {
 		criticalWidth = 600;
 		criticalHeight = 19200;
 	}
-	_f.fancyLog("-> Generating critical CSS: " + _f.chalk.cyan(criticalSrc) + " -> " + _f.chalk.magenta(criticalDest));
+	_f.fancyLog("-> Generating critical CSS: " + criticalSrc + " -> " + criticalDest);
 	_f.critical.generate({
 		src: criticalSrc,
 		dest: criticalDest,
@@ -139,14 +139,14 @@ function processCriticalCSS(element, i, callback) {
 		ignore: [],
 		base: pkg.paths.dist.base,
 		css: [
-			pkg.paths.dist.css + pkg.vars.siteCssName,
+			pkg.paths.dist.css + pkg.vars.siteCssName
 		],
 		minify: true,
 		width: criticalWidth,
 		height: criticalHeight
 	}, (err, output) => {
 		if (err) {
-			_f.fancyLog(_f.chalk.magenta(err));
+			_f.fancyLog(err);
 		}
 		callback();
 	});
