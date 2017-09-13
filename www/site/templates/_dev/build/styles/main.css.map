@@ -1,1 +1,1 @@
-{"version":3,"sources":["main.scss"],"names":[],"mappings":"AAAA;EACC,iBAAe,EACf;;AACD;EACC,iBAAe,EACf","file":"main.css","sourcesContent":["body{\n\tbackground:pink;\n}\nhtml{\n\tbackground:blue;\n}\n"]}
+{"version":3,"sources":["main.scss"],"names":[],"mappings":"AAAA;EACC,gBAAc,EACd;;AACD;EACC,iBAAe,EACf","file":"main.css","sourcesContent":["body{\n\tbackground:red;\n}\nhtml{\n\tbackground:blue;\n}\n"]}

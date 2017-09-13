@@ -123,7 +123,7 @@ function doSynchronousLoop(data, processData, done) {
 // Process the critical path CSS one at a time
 function processCriticalCSS(element, i, callback) {
 	const criticalSrc = pkg.urls.critical + element.url;
-	const criticalDest = pkg.paths.templates + element.template + "_critical.min.css";
+	const criticalDest = element.template + "_critical.min.css";
 
 	let criticalWidth = 1200;
 	let criticalHeight = 1200;
@@ -137,10 +137,8 @@ function processCriticalCSS(element, i, callback) {
 		dest: criticalDest,
 		inline: false,
 		ignore: [],
-		base: pkg.paths.dist.base,
-		css: [
-			pkg.paths.dist.css + pkg.vars.siteCssName
-		],
+		base: pkg.paths.dist.css,
+		css: pkg.paths.dist.css + pkg.vars.siteCssName,
 		minify: true,
 		width: criticalWidth,
 		height: criticalHeight
@@ -193,7 +191,7 @@ function processAccessibility(element, i, callback) {
 		};
 	const test = _f.pa11y(options);
 
-	_f.fancyLog("-> Checking Accessibility for URL: " + _f.chalk.cyan(accessibilitySrc));
+	_f.fancyLog("-> Checking Accessibility for URL: " + accessibilitySrc);
 	test.run(accessibilitySrc, (error, results) => {
 		cliReporter.results(results, accessibilitySrc);
 		callback();

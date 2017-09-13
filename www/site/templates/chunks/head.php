@@ -6,7 +6,7 @@
 		
 		<?php
 			$cssCookie = $input->cookie->criticalCssLastMod;
-			$cssCriticalPage = $config->paths->templates.'styles/'.$page->template->name.'.min.css';
+			$cssCriticalPage = $config->paths->templates.'styles/'.$page->template->name.'_critical.min.css';
 			$cssFileMain = $config->urls->templates.'styles/main.min.css';
 			$cssLatestLastMod = filemtime($config->paths->templates.'styles/main.min.css'); //not sure if there's a more performant way to do this. Possibly.
 			
