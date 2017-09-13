@@ -1,1 +1,5 @@
 /nbproject/private/
+
+site/assets/sessions
+site/assets/logs
+site/assets/cache

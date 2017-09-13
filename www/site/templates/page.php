@@ -8,6 +8,14 @@ include 'chunks/header.php';
 Content goes here
 
 <?php
+
+echo $cssCookie;
+echo $cssCriticalPage ;
+echo $cssFileMain;
+echo $cssLatestLastMod;
+?>
+
+<?php
 include 'chunks/footer.php';
 include 'chunks/foot.php';
 ?>

@@ -1,3 +1,0 @@
-2017-09-04 15:03:46	guest	http://gulpbddel.dev/	Parse Error: 	syntax error, unexpected 'include' (T_INCLUDE) (line 3 of /Users/myrtockontouli/Sites/gulpbddel/www/site/assets/cache/FileCompiler/site/templates/home.php)
-2017-09-04 15:05:18	guest	http://gulpbddel.dev/	Parse Error: 	syntax error, unexpected 'echo' (T_ECHO) (line 3 of /Users/myrtockontouli/Sites/gulpbddel/www/site/assets/cache/FileCompiler/site/templates/home.php)
-2017-09-04 16:42:10	guest	http://gulpbddel.dev/	Parse Error: 	syntax error, unexpected 'echo' (T_ECHO) (line 3 of /Users/myrtockontouli/Sites/gulpbddel/www/site/assets/cache/FileCompiler/site/templates/home.php)
