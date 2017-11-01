@@ -80,8 +80,18 @@ gulp.task("js-babel", () => {
 		.pipe(gulp.dest(pkg.paths.build.js));
 });
 
+// webpack js task - package required modules and overwrite for our Javascript into the build directory
+gulp.task("js-webpack", () => {
+	_f.fancyLog("-> Packaging Javascript via Webpack...");
+	return gulp.src(pkg.paths.build.js + "*.js")
+		.pipe(_f.plumber({errorHandler: onError}))
+		.pipe(_f.webpack({output: {filename:'[name].js'}}))
+		.pipe(_f.size({gzip: true, showFiles: true}))
+		.pipe(gulp.dest(pkg.paths.build.js));
+});
+
 // js task - minimize any distribution Javascript into the public js folder, and add our banner to it
-gulp.task("js", ["js-babel"], () => {
+gulp.task("js", ["js-babel","js-webpack"], () => {
 	_f.fancyLog("-> Building js");
 	return gulp.src(pkg.globs.distJs)
 		.pipe(_f.plumber({errorHandler: onError}))
