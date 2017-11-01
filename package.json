@@ -30,7 +30,6 @@
 			"fontello": "./www/site/templates/_dev/src/fonts/fontello/",
 			"fonts": "./www/site/templates/_dev/src/fonts/",
 			"js": "./www/site/templates/_dev/src/scripts/",
-			"img": "./www/site/templates/_dev/src/img/",
 			"css": "./www/site/templates/_dev/src/styles/",
 			"scss": "./www/site/templates/_dev/src/styles/scss/"
 		},
@@ -46,11 +45,10 @@
 			"css": "./www/site/templates/_dev/build/styles/",
 			"fontello": "./www/site/templates/_dev/build/fonts/fontello/",
 			"fonts": "./www/site/templates/_dev/build/fonts/",
-			"js": "./www/site/templates/_dev/build/scripts/",
-			"html": "./www/site/templates/_dev/build/html/"
+			"js": "./www/site/templates/_dev/build/scripts/"
 		},
 		"favicon": {
-			"src": "./www/site/templates/img/favicon/favicon.ico",
+			"src": "./www/site/templates/_dev/src/favicon/favicon.svg",
 			"dest": "./www/site/templates/img/favicon/",
 			"path": "./www/site/templates/img/favicon/"
 		},
@@ -73,10 +71,6 @@
 			"./www/site/templates/_dev/build/fonts/fontello/css/fontello-codes.css",
 			"./www/site/templates/_dev/build/styles/*.css",
 			"./www/site/templates/_dev/src/styles/*.css"
-		],
-		"fonts": [
-			"./www/site/templates/_dev/build/fonts/fontello/font/*.{eot,ttf,woff,woff2}",
-			"./www/site/templates/_dev/src/fonts/*.{eot,ttf,woff,woff2}"
 		],
 		"critical": [
 			{

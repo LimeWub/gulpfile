@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "name": "gulpbddel",
+  "description": "Compiler/Work setup",
+  "icons": {
+    "60": "www/site/templates/img/favicon/firefox_app_60x60.png",
+    "128": "www/site/templates/img/favicon/firefox_app_128x128.png",
+    "512": "www/site/templates/img/favicon/firefox_app_512x512.png"
+  },
+  "developer": {
+    "name": "Myrto Kontouli",
+    "url": "https://gulpbddel.com/"
+  }
+}

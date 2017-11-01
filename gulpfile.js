@@ -219,6 +219,7 @@ gulp.task("a11y", (callback) => {
 //favicons-generate task
 gulp.task("favicons-generate", () => {
 	_f.fancyLog("-> Generating favicons");
+	_f.fancyLog(pkg.paths.favicon.src);
 	return gulp.src(pkg.paths.favicon.src).pipe(_f.favicons({
 		appName: pkg.name,
 		appDescription: pkg.description,
@@ -226,13 +227,13 @@ gulp.task("favicons-generate", () => {
 		developerURL: pkg.urls.live,
 		background: "#FFFFFF",
 		path: pkg.paths.favicon.path,
-		url: pkg.site_url,
+		url: pkg.urls.live,
 		display: "standalone",
 		orientation: "portrait",
 		version: pkg.version,
 		logging: false,
 		online: false,
-		html: pkg.paths.build.html + "favicons.html",
+		html: pkg.paths.build.base + "favicons.html",
 		replace: true,
 		icons: {
 			android: false, // Create Android homescreen icon. `boolean`
@@ -259,7 +260,7 @@ gulp.task("favicons", ["favicons-generate"], () => {
 
 // imagemin task
 gulp.task("imagemin", () => {
-	return gulp.src(pkg.paths.dist.img + "**/*.{png,jpg,jpeg,gif,svg}")
+	return gulp.src([pkg.paths.dist.img + "**/*.{png,jpg,jpeg,gif,svg}"])
 		.pipe(_f.imagemin({
 			progressive: true,
 			interlaced: true,
@@ -276,12 +277,13 @@ gulp.task("generate-fontello", () => {
 	return gulp.src(pkg.paths.src.fontello + "config.json")
 		.pipe(_f.fontello())
 		.pipe(_f.print())
-		.pipe(gulp.dest(pkg.paths.build.fontello))
+		.pipe(gulp.dest(pkg.paths.build.fontello));
 });
 
 //copy fonts task
 gulp.task("fonts", ["generate-fontello"], () => {
-	return gulp.src(pkg.globs.fonts)
+	return gulp.src([pkg.paths.src.fonts+ "*.{eot,ttf,woff,woff2}",
+					pkg.paths.build.fontello+ "font/*.{eot,ttf,woff,woff2}"])
 		.pipe(gulp.dest(pkg.paths.dist.fonts));
 });
 

@@ -1,6 +1,10 @@
-import 'babel-polyfill'; //this is how you polyfill, right?
-
 [1,2,3].map(n => n + 1);
+
+const bar = ["a", "b", "c"];
+console.log('hello');
+let newArray = Array.from(bar);
+console.log(newArray);
+console.log('scoopDaWooop!');
 
 const countries = {
     BR: 'Brazil',
